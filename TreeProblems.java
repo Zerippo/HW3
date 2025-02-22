@@ -1,5 +1,5 @@
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ *   Joshua Kao  /   COMP 272/400 001
  *
  * This java file contains several simple tree problems that need to be
  * codified. These routines  must use the TreeMap and TreeSet library
@@ -20,17 +20,16 @@ public class TreeProblems {
    */
   
   public static Set<Integer> different(Set<Integer> setA, Set<Integer> setB) {
-
-    // INSERT CODE HERE - DO NOT FORGET TO PLACE YOUR NAME ABOVE
-    //
-    // This can be done numerous ways, but once such will only that
-    // *several* lines of code. Hint: create two temporary TreeSets and utilize the
-    // methods retainAll(), addAll(), and removeAll(). But in the end, get something to work.
-
-    return setA;
+    Set<Integer> result = new TreeSet<>(setA);  // Create a temporary TreeSet to hold the elements
+    result.addAll(setB);   // Add all elements from setB to the result
+    Set<Integer> common = new TreeSet<>(setA);  // Create another TreeSet to hold the common elements
+    common.retainAll(setB);    // Retain only the elements that are also in setB
+    result.removeAll(common);  // Remove the common elements from the result
+      
+    return result;
   }
 
-
+  
   /**
    * Method removeEven()
    *
@@ -39,10 +38,16 @@ public class TreeProblems {
    */
 
   public static void removeEven(Map<Integer, String> treeMap) {
-
-    // INSERT CODE HERE.
-
-    return;
+      // Create an iterator to iterate over the entry set of the treeMap
+      Iterator<Map.Entry<Integer, String>> iterator = treeMap.entrySet().iterator();
+      // Iterate through the entries
+      while (iterator.hasNext()) {
+          Map.Entry<Integer, String> entry = iterator.next();
+          // If the key is even, remove the entry
+          if (entry.getKey() % 2 == 0) {
+              iterator.remove();
+          }
+      }
   }
 
 
@@ -54,10 +59,8 @@ public class TreeProblems {
    */
 
   public boolean treesEqual(Map<Integer, String> tree1,Map<Integer, String> tree2 ) {
-
-    // INSERT CODE HERE
-
-    return false;
+    
+    return tree1.equals(tree2);
 
   }
 
