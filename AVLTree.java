@@ -1,6 +1,6 @@
 
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * Joshua Kao / COMP 272/400 001
  *
  * This java file is a Java object implementing simple AVL Tree.
  * You are to complete the deleteElement method.
@@ -342,28 +342,83 @@ class LUC_AVLTree {
      */
 
     private Node deleteElement(int value, Node node) {
-
-        /*
-         * ADD CODE HERE
-         * 
-         * NOTE, that you should use the existing coded private methods
-         * in this file, which include:
-         *      - minValueNode,
-         *      - getMaxHeight,
-         *      - getHeight,
-         *      - getBalanceFactor,
-         *      - LLRotation
-         *      - RRRotation,
-         *      - LRRotation,
-         *      - RLRotation.
-         *
-         * To understand what each of these methods do, see the method prologues and
-         * code for each. You can also look at the method InsertElement, as it has do
-         * do many of the same things as this method.
-         */
-
+    if (node == null) {
         return node;
     }
+
+    // Perform standard BST delete
+    if (value < node.value) {
+        node.leftChild = deleteElement(value, node.leftChild);
+    } else if (value > node.value) {
+        node.rightChild = deleteElement(value, node.rightChild);
+    } else {
+        // Node with only one child or no child
+        if ((node.leftChild == null) || (node.rightChild == null)) {
+            Node temp = null;
+            if (temp == node.leftChild) {
+                temp = node.rightChild;
+            } else {
+                temp = node.leftChild;
+            }
+
+            // No child case
+            if (temp == null) {
+                temp = node;
+                node = null;
+            } else { // One child case
+                node = temp; // Copy the contents of the non-empty child
+            }
+        } else {
+            // Node with two children: Get the inorder successor (smallest
+            // in the right subtree)
+            Node temp = minValueNode(node.rightChild);
+
+            // Copy the inorder successor's data to this node
+            node.value = temp.value;
+
+            // Delete the inorder successor
+            node.rightChild = deleteElement(temp.value, node.rightChild);
+        }
+    }
+
+    // If the tree had only one node then return
+    if (node == null) {
+        return node;
+    }
+
+    // Update the height of the current node
+    node.height = getMaxHeight(getHeight(node.leftChild), getHeight(node.rightChild)) + 1;
+
+    // Get the balance factor of this node to check whether this node became unbalanced
+    int balance = getBalanceFactor(node);
+
+    // If this node becomes unbalanced, then there are 4 cases:
+
+    // Left Left Case
+    if (balance > 1 && getBalanceFactor(node.leftChild) >= 0) {
+        return LLRotation(node);
+    }
+
+    // Left Right Case
+    if (balance > 1 && getBalanceFactor(node.leftChild) < 0) {
+        node.leftChild = RRRotation(node.leftChild);
+        return LLRotation(node);
+    }
+
+    // Right Right Case
+    if (balance < -1 && getBalanceFactor(node.rightChild) <= 0) {
+        return RRRotation(node);
+    }
+
+    // Right Left Case
+    if (balance < -1 && getBalanceFactor(node.rightChild) > 0) {
+        node.rightChild = LLRotation(node.rightChild);
+        return RRRotation(node);
+    }
+
+    return node;
+}
+
 
 
     /**
